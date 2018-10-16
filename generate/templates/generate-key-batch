@@ -3,7 +3,7 @@ Key-Length: {{ record.get('length', 4096) }}
 Subkey-Type: {{ record.get('sub_key', {}).get('type', 'RSA') }}
 Subkey-Length: {{ record.get('sub_key', {}).get('length', 4096) }}
 Name-Real: {{ record.user }}
-Name-Comment: {{ record.comment | default('') }}
+Name-Comment: {{ record.comment | default('no comment') }}
 Name-Email: {{ record.email }}
 Expire-Date: {{ record.expire_date | default(0) }}
 Passphrase: {{ record.passphrase }}

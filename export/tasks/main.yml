@@ -1,0 +1,13 @@
+---
+
+- name: export keys
+  include_tasks: export.yml
+  vars:
+    email: "{{ item.email }}"
+    passphrase: "{{ item.passphrase }}"
+    export_dir: "{{ item.export_dir }}"
+  when:
+    - item.email is defined
+    - item.passphrase is defined
+    - item.export_dir is defined
+  with_items: "{{ keys }}"

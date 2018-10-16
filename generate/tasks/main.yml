@@ -5,6 +5,6 @@
   vars:
     record: "{{ item }}"
   with_items: "{{ keys }}"
-  no_log: True
+  no_log: "{{ hide_secrets }}" 
   when: keys is defined
 
