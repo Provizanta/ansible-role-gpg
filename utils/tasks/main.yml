@@ -1,0 +1,9 @@
+---
+
+- name: establish dependencies
+  package: 
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - gpg
+    - gpg-agent
