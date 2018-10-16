@@ -1,0 +1,20 @@
+---
+
+- name: Notice!
+  debug:
+    msg: "Generating a key for user '{{ record.user }}' with e-mail '{{ record.email }}'"
+
+# https://www.gnupg.org/documentation/manuals/gnupg/Unattended-GPG-key-generation.html
+- name: generate key
+  shell: echo "{{ config }}" | gpg --batch --generate-key
+  vars:
+    config: "{{ lookup('template', './generate-key-batch') }}"
+  no_log: True
+
+- name: export keys
+  include_tasks: export.yml
+  vars:
+    export_dir: "{{ record.export_dir }}"
+    passphrase: "{{ record.passphrase }}"
+    email: "{{ record.email }}"
+  when: record.export_dir is defined
