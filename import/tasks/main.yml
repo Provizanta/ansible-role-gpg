@@ -1,0 +1,16 @@
+---
+
+- name: import keys
+  include_tasks: import.yml
+  vars:
+    public_key: "{{ item.public }}"
+    private_key: "{{ item.private }}"
+    passphrase: "{{ item.passphrase }}"
+    trust: "{{ item.trust_file }}"
+  when:
+    - item.public is defined
+    - item.private is defined
+    - item.passphrase is defined
+    - item.trust_file is defined
+  no_log: "{{ hide_secrets }}"
+  with_items: "{{ keys }}"

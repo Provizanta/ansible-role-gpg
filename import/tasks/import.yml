@@ -1,0 +1,14 @@
+---
+
+- name: import public key
+  shell: echo "{{ passphrase }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --trustdb-name "{{ trust }}" --import "{{ public_key }}"
+  no_log: "{{ hide_secrets }}" 
+
+- name: import private key
+  shell: echo "{{ passphrase }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --import "{{ private_key }}"
+  no_log: "{{ hide_secrets }}"
+
+# https://lists.gt.net/gnupg/users/59660
+#- name: import trust
+#  shell: echo "{{ passphrase }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --import-ownertrust "{{ trust }}"
+#  no_log: "{{ hide_secrets }}"
