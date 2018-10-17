@@ -30,6 +30,8 @@ Specify the key parameters needed for key import.
       roles:
         - gpg/generate
           vars:
+            trusts:
+              - path: "/path/to/trust.pgp"
             keys:
               - public: ~/public.key
                 private: ~/private.key
