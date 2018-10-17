@@ -40,6 +40,7 @@ Specify the key parameters needed for key generation to be passed to the role.
               - user: test
                 email: test@test.com
                 passphrase: test
+                comment: "No comment is not the best comment."
 
 License
 -------
