@@ -3,18 +3,16 @@
 - name: export keys
   include_tasks: export_key.yml
   vars:
-    email: "{{ item.email }}"
+    id: "{{ item.id }}"
     passphrase: "{{ item.passphrase }}"
-    export_dir: "{{ item.export_dir }}"
   when:
-    - item.email is defined
+    - item.id is defined
     - item.passphrase is defined
-    - item.export_dir is defined
+    - export_dir is defined
   with_items: "{{ keys }}"
 
 - name: export trust
   include_tasks: export_trust.yml
-  vars:
-    export_dir: "{{ trust.export_dir }}"
   when:
-    - trust.export_dir is defined
+    - export_trust
+    - export_dir is defined

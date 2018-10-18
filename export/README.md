@@ -11,13 +11,13 @@ None
 Role Variables
 --------------
 
-trust:
-  export_dir: destination for local trust file export
+export_dir: destination for local trust file export
 
 keys: list of parameters needed to identify the keys to be exported
-  email: e-mail associated with this key
+  id: key-id (e.g. e-mail associated with this key
   passphrase: passphrase used to unlock the key
-  export_dir: destination for public and private key exports
+
+export_trust: indicate whether the trust should be exported (mandatory)
 
 Dependencies
 ------------
@@ -32,12 +32,11 @@ Specify the key parameters needed for key generation to be passed to the role.
       roles:
         - gpg/export
           vars:
-            trust:
-              export_dir: ~/test-export
+            export_trust: True
+            export_dir: ~/test-export
             keys:
-              - email: test@test.com
+              - id: test@test.com
                 passphrase: test
-                export_dir: ~/test-export/test-account-backup
 
 License
 -------
