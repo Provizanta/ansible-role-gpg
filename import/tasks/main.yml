@@ -1,14 +1,17 @@
 ---
 
-- name: import keys
-  include_tasks: import.yml
-  vars:
-    public_key: "{{ item.public }}"
-    private_key: "{{ item.private }}"
-    passphrase: "{{ item.passphrase }}"
+- name: import private keys
+  shell: echo "{{ item.passphrase }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --import "{{ item.private }}"
   when:
-    - item.public is defined
     - item.private is defined
+    - item.passphrase is defined
+  no_log: "{{ hide_secrets }}"
+  with_items: "{{ keys }}"
+
+- name: import public keys
+  shell: echo "{{ item.passphrase }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --import "{{ item.public }}"
+  when:
+    - item.public is defined 
     - item.passphrase is defined
   no_log: "{{ hide_secrets }}"
   with_items: "{{ keys }}"
