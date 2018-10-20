@@ -2,9 +2,9 @@
 
 - name: generate keys 
   include_tasks: generate.yml
-  vars:
-    record: "{{ item }}"
   with_items: "{{ keys }}"
-  no_log: "{{ hide_secrets }}" 
+  no_log: "{{ hide_secrets }}"
+  loop_control:
+    loop_var: record 
   when: keys is defined
 

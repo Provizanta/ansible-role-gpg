@@ -1,0 +1,1 @@
+RSA{{ subkey['length'] | default(4096) }} '{{ subkey['purpose'] }}' {{ subkey['expiration'] | default(0) }}

@@ -1,6 +1,6 @@
 ---
 
-- name: Notice!
+- name: INFO
   debug:
     msg: "Generating a key for user '{{ record.user }}' with e-mail '{{ record.email }}'"
 
@@ -8,5 +8,28 @@
 - name: generate key
   shell: echo "{{ config }}" | gpg --batch --generate-key - 
   vars:
-    config: "{{ lookup('template', './generate-key-batch') }}"
+    config: "{{ lookup('template', './generate-key') }}"
+  no_log: "{{ hide_secrets }}"
+
+- name: INFO
+  block:
+    - name: find fingerprint
+      shell: "gpg --fingerprint {{ record.email }} | sed -n 2p | tr -d ' '"
+      register: find_fingerprint
+
+    - name: remember fingerprint
+      set_fact:
+        fingerprint: "{{ find_fingerprint.stdout }}"
+
+    - debug:
+        msg: "Generating sub-keys for user '{{ record.user }}' with e-mail '{{ record.email }}' [fpr: {{ fingerprint }}]"
+
+- name: generate sub-keys
+  shell: echo "{{ record.passphrase }}" | gpg --batch --pinentry-mode loopback --passphrase-fd 0 --quick-add-key {{ fingerprint }} {{ config }}
+  vars:
+    config: "{{ lookup('template', './generate-subkey') | trim }}"
+  with_items: "{{ record.sub_keys }}"
+  loop_control:
+    loop_var: subkey
+  when: record.sub_keys is defined
   no_log: "{{ hide_secrets }}"

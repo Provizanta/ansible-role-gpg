@@ -12,16 +12,17 @@ Role Variables
 --------------
 
 keys: list of key parameters to be used for generating
-
-key.type: type of the key (e.g. RSA)
-key.length: length of the key
-key.sub_key.type: type of the subkey (e.g. RSA)
-key.sub_key.length: length of the subkey
-key.user: user name
-key.email: e-mail associated with this key
-key.passphrase: passphrase used to unlock the key
-key.expire_date: when should the key expire (e.g. 0 for never)
-key.export_dir: directory, where public and private key along with revokation certificate are exported to
+  - user: user name
+    email: e-mail associated with this key
+    type: type of the key (e.g. RSA)
+    length: length of the key
+    passphrase: passphrase used to unlock the key
+    expiration: when should the key expire (e.g. 0 for never)
+    sub_keys:
+      - purpose: type of the subkey (e.g. sign/encrypt)
+        length: length of the subkey
+        expiration: when should the subkey expire (e.g. 0 for never)
+ 
 
 Dependencies
 ------------
@@ -41,6 +42,11 @@ Specify the key parameters needed for key generation to be passed to the role.
                 email: test@test.com
                 passphrase: test
                 comment: "No comment is not the best comment."
+                sub_keys:
+                  - purpose: 'sign'
+                    length: 2048
+                  - purpose: 'sign,encrypt'
+                    expiration: 1w
 
 License
 -------
