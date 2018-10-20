@@ -2,14 +2,13 @@
 
 - name: export keys
   include_tasks: export_key.yml
-  vars:
-    id: "{{ item.id }}"
-    passphrase: "{{ item.passphrase }}"
   when:
-    - item.id is defined
-    - item.passphrase is defined
+    - key.id is defined
+    - key.passphrase is defined
     - export_dir is defined
   with_items: "{{ keys }}"
+  loop_control:
+    loop_var: key
 
 - name: export trust
   include_tasks: export_trust.yml

@@ -2,23 +2,28 @@
 
 - name: ensure export directory presence
   file:
-    path: "{{ export_dir }}/{{ id }}"
+    path: "{{ export_dir }}/{{ key.id }}"
     state: directory
 
 - name: generate revocation certificate
-  shell: echo -e "y\n0\n\ny" > "{{ command_file }}" && echo "{{ passphrase }}" | gpg --pinentry-mode loopback --command-file "{{ command_file }}" --passphrase-fd 0 --gen-revoke "{{ id }}" > '{{ id }}.revocation-certificate'
+  shell: echo -e "y\n0\n\ny" > "{{ command_file }}" && echo "{{ key.passphrase }}" | gpg --pinentry-mode loopback --command-file "{{ command_file }}" --passphrase-fd 0 --gen-revoke "{{ key.id }}" > '{{ key.id }}.revocation-certificate'
   args:
-    chdir: "{{ export_dir }}/{{ id }}"
+    chdir: "{{ export_dir }}/{{ key.id }}"
     executable: bash
   vars:
     command_file: /tmp/cmd
 
 - name: export public key
-  shell: echo "{{ passphrase }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --export --armor "{{ id }}" > '{{ id }}.public.gpg-key'
+  shell: echo "{{ key.passphrase }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --export --armor "{{ key.id }}" > '{{ key.id }}.public.gpg-key'
   args:
-    chdir: "{{ export_dir }}/{{ id }}"
+    chdir: "{{ export_dir }}/{{ key.id }}"
 
 - name: export private key
-  shell: echo "{{ passphrase }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --export-secret-keys --armor "{{ id }}" > '{{ id }}.private.gpg-key'
+  shell: echo "{{ key.passphrase }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --export-secret-keys --armor "{{ key.id }}" > '{{ key.id }}.private.gpg-key'
   args:
-    chdir: "{{ export_dir }}/{{ id }}"
+    chdir: "{{ export_dir }}/{{ key.id }}"
+
+- name: export private subkeys only
+  shell: echo "{{ key.passphrase }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --export-secret-subkeys --armor "{{ key.id }}" > '{{ key.id }}.private.subkeys_only.gpg-key'
+  args:
+    chdir: "{{ export_dir }}/{{ key.id }}"
