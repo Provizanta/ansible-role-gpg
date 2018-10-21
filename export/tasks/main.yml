@@ -3,7 +3,7 @@
 - name: export keys
   include_tasks: export_key.yml
   when:
-    - key.id is defined
+    - key.email is defined
     - key.passphrase is defined
     - export_dir is defined
   with_items: "{{ keys }}"

@@ -1,0 +1,9 @@
+---
+
+export:
+  export_trust: yes
+
+import:
+  trusts: []
+
+harden: yes

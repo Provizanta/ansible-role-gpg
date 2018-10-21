@@ -2,28 +2,28 @@
 
 - name: ensure export directory presence
   file:
-    path: "{{ export_dir }}/{{ key.id }}"
+    path: "{{ export_dir }}/{{ key.email }}"
     state: directory
 
 - name: generate revocation certificate
-  shell: echo -e "y\n0\n\ny" > "{{ command_file }}" && echo "{{ key.passphrase }}" | gpg --pinentry-mode loopback --command-file "{{ command_file }}" --passphrase-fd 0 --gen-revoke "{{ key.id }}" > '{{ key.id }}.revocation-certificate'
+  shell: echo -e "y\n0\n\ny" > "{{ command_file }}" && echo "{{ key.passphrase }}" | gpg --pinentry-mode loopback --command-file "{{ command_file }}" --passphrase-fd 0 --gen-revoke {{ key.email }} > {{ key.email }}.revocation-certificate
   args:
-    chdir: "{{ export_dir }}/{{ key.id }}"
+    chdir: "{{ export_dir }}/{{ key.email }}"
     executable: bash
   vars:
     command_file: /tmp/cmd
 
 - name: export public key
-  shell: echo "{{ key.passphrase }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --export --armor "{{ key.id }}" > '{{ key.id }}.public.gpg-key'
+  shell: echo "{{ key.passphrase }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --export --armor {{ key.email }} > {{ key.email }}.public.gpg-key
   args:
-    chdir: "{{ export_dir }}/{{ key.id }}"
+    chdir: "{{ export_dir }}/{{ key.email }}"
 
 - name: export private key
-  shell: echo "{{ key.passphrase }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --export-secret-keys --armor "{{ key.id }}" > '{{ key.id }}.private.gpg-key'
+  shell: echo "{{ key.passphrase }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --export-secret-keys --armor {{ key.email }} > {{ key.email }}.private.gpg-key
   args:
-    chdir: "{{ export_dir }}/{{ key.id }}"
+    chdir: "{{ export_dir }}/{{ key.email }}"
 
 - name: export private subkeys only
-  shell: echo "{{ key.passphrase }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --export-secret-subkeys --armor "{{ key.id }}" > '{{ key.id }}.private.subkeys_only.gpg-key'
+  shell: echo "{{ key.passphrase }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --export-secret-subkeys --armor {{ key.email }} > {{ key.email }}.private.subkeys_only.gpg-key
   args:
-    chdir: "{{ export_dir }}/{{ key.id }}"
+    chdir: "{{ export_dir }}/{{ key.email }}"

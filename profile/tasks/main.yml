@@ -1,0 +1,47 @@
+---
+
+- name: generate GPG keys
+  import_role:
+    name: user/gpg/generate
+  vars:
+    keys: "{{ gpg['generate']['keys'] }}"
+  when:
+    - gpg is defined
+    - gpg['generate'] is defined
+    - gpg['generate']['keys'] is defined
+
+- name: export GPG keys
+  import_role:
+    name: user/gpg/export
+  vars:
+    keys: "{{ gpg['export']['keys'] }}"
+    export_dir: "{{ gpg['export']['export_dir'] }}"
+    export_trust: "{{ gpg['export']['export_trust'] }}"
+  when:
+    - gpg is defined
+    - gpg['export'] is defined
+    - gpg['export']['keys'] is defined
+    - gpg['export']['export_dir'] is defined
+
+- name: import GPG keys
+  import_role:
+    name: user/gpg/import
+  vars:
+    trusts: "{{ gpg['import']['trusts'] }}"
+    keys: "{{ gpg['import']['keys'] }}"
+  when:
+    - gpg is defined
+    - gpg['import'] is defined
+    - gpg['import']['keys'] is defined
+
+- name: harden exported gpg master private keys
+  include_tasks: harden.yml
+  with_items: "{{ gpg['export']['keys'] }}"
+  vars:
+    export_dir: "{{ gpg['export']['export_dir'] }}"
+  loop_control:
+    loop_var: key
+  when:
+    - gpg is defined
+    - gpg['export'] is defined
+    - gpg['export']['keys'] is defined
