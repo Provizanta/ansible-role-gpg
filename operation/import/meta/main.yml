@@ -16,4 +16,4 @@ galaxy_info:
   galaxy_tags: [gpg key openpgp]
 
 dependencies:
-  - gpg/utils
+  - gpg/operation/utils

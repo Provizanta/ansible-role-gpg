@@ -13,7 +13,7 @@ galaxy_info:
       versions:
       - all
 
-  galaxy_tags: [gpg key openpgp harden]
+  galaxy_tags: [gpg key openpgp]
 
 dependencies:
-  - gpg/utils
+  - gpg/operation/utils

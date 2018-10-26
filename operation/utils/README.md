@@ -22,7 +22,7 @@ Example Playbook
 ----------------
 
     - hosts: localhost
-      roles: gpg/utils
+      roles: gpg/operation/utils
 
 License
 -------

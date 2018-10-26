@@ -11,11 +11,13 @@ None
 Role Variables
 --------------
 
-keys: list of parameters needed to identify the keys to be exported
-  public: path to public key
-  private: path to private key
-  passphrase: passphrase that unlocks the key
-  trust_file: path to trust
+trusts:
+  - path: path to the trust to be imported
+
+keys:
+  - public: path to the public key
+    private: path to the private key
+    passphrase: passphrase for the key specified
 
 Dependencies
 ------------
@@ -28,7 +30,7 @@ Specify the key parameters needed for key import.
 
     - hosts: localhost
       roles:
-        - gpg/generate
+        - gpg/operation/import
           vars:
             trusts:
               - path: "/path/to/trust.pgp"

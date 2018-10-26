@@ -35,7 +35,7 @@ Specify the key parameters needed for key generation to be passed to the role.
 
     - hosts: localhost
       roles:
-        - gpg/generate
+        - gpg/operation/generate
           vars:
             keys:
               - user: test

@@ -30,7 +30,7 @@ Specify the key parameters needed for key generation to be passed to the role.
 
     - hosts: localhost
       roles:
-        - gpg/export
+        - gpg/operation/export
           vars:
             export_trust: True
             export_dir: ~/test-export
