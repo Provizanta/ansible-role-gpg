@@ -1,7 +1,10 @@
-GPG profile
+GPG
 =========
 
-Create a GPG profile using roles: gpg/operation/generate, gpg/operation/export and gpg/operation/import.
+Manage GPG keys using roles:
+  - gpg/operation/generate
+  - gpg/operation/export
+  - gpg/operation/import.
 
 Requirements
 ------------
@@ -11,15 +14,15 @@ None
 Role Variables
 --------------
 
-gpg:
-  generate: contains parameteres passed to gpg/operation/generate
-    ...
-  export: contains parameters passed to gpg/operation/export
-    ...
-  import: contains parameters passed to gpg/operation/import
-    ...
+    gpg:
+      generate: contains parameteres passed to gpg/operation/generate
+        ...
+      export: contains parameters passed to gpg/operation/export
+        ...
+      import: contains parameters passed to gpg/operation/import
+        ...
 
-harden: specifies whether the generated profile should be hardened by removing the private master key
+    harden: specifies whether the generated profile should be hardened by removing the private master key
 
 Dependencies
 ------------
@@ -32,7 +35,7 @@ Specify the key parameters needed for key generation to be passed to the role.
 
     - hosts: localhost
       roles:
-        - gpg/operation/generate
+        - role: gpg/operation/generate
           vars:
             gpg:
               generate:
