@@ -1,0 +1,15 @@
+---
+
+- name: export keys
+  when:
+    - keys is defined
+    - key['email'] is defined
+    - key['passphrase'] is defined
+  include_tasks: export/key.yml
+  loop: "{{ keys }}"
+  loop_control:
+    loop_var: key
+
+- name: export trust
+  when: export_trust
+  include_tasks: export/trust.yml

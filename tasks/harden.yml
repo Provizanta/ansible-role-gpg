@@ -1,18 +1,14 @@
 ---
 
 - name: identify fingerprint
-  shell: gpg --list-secret-keys --with-colons --fingerprint {{ key.email}} | sed -n 's/^fpr:::::::::\([[:alnum:]]\+\):/\1/p' | sed -n 1p
+  shell: gpg --list-secret-keys --with-colons --fingerprint {{ key['email'] }} | sed -n 's/^fpr:::::::::\([[:alnum:]]\+\):/\1/p' | sed -n 1p
   register: fp
 
-- name: save fingerprint
-  set_fact:
-    fingerprint: "{{ fp.stdout }}" 
-
 - name: remove private master key
-  shell: echo "{{ key.passphrase }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --delete-secret-key {{ fingerprint }}
+  shell: echo "{{ key['passphrase'] }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --delete-secret-key {{ fp.stdout }}
 
 - name: reimport only private subkeys
-  shell: echo "{{ key.passphrase }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --import {{ key.email }}/{{ key.email }}.private.subkeys_only.gpg-key
+  shell: echo "{{ key['passphrase'] }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --import {{ key['email'] }}/{{ key['email'] }}.private.subkeys_only.gpg-key
   args:
     chdir: "{{ export_dir }}"
-  # no_log: no 
+  no_log: "{{ hide_secrets }}"

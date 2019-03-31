@@ -1,9 +1,11 @@
 ---
 
 export:
+  path: ~/gpg-keys
   export_trust: yes
+  harden: no
 
 import:
   trusts: []
 
-harden: yes
+hide_secrets: yes

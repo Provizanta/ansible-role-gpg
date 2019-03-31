@@ -1,10 +1,7 @@
 GPG
 =========
 
-Manage GPG keys using roles:
-  - gpg/operation/generate
-  - gpg/operation/export
-  - gpg/operation/import.
+Manage GPG keys.
 
 Requirements
 ------------
@@ -14,15 +11,37 @@ None
 Role Variables
 --------------
 
-    gpg:
-      generate: contains parameteres passed to gpg/operation/generate
-        ...
-      export: contains parameters passed to gpg/operation/export
-        ...
-      import: contains parameters passed to gpg/operation/import
-        ...
+    hide:_secrets: <bool, omit the secret data from logs>
+    generate: 
+      keys: <list, key parameters to be used for generating>
+        - user: <string>
+          email: <string, e-mail associated with this key>
+          type: <string, key type (e.g. RSA)>
+          length: <int>
+          passphrase: <string, passphrase used to unlock the key>
+          expiration: <date, when should the key expire (e.g. 0 for never)>
+          sub_keys:
+            - purpose: <string, subkey type (e.g. sign/encrypt)>
+              length: <int, subkey length>
+              expiration: <date, when should the subkey expire (e.g. 0 for never)>
+  
+    import:
+      trusts: <list, trusts to import>
+        - path: <string, path to trust>
+      keys: <list, keys to import>
+        - public: <string, path to public key>
+          private: <string, path to private key>
+          passphrase: <string, path to passphrase>
+    
+    export: 
+      dir: <string, destination for local trust file export>
 
-    harden: specifies whether the generated profile should be hardened by removing the private master key
+      keys: <list, args for key exports>
+        - email: <string> 
+          passphrase: <string, passphrase used to unlock the key>
+
+      export_trust: <bool, should the trust be exported>
+      harden: <bool, harden by removing the private master, leaving behind only subkeys>
 
 Dependencies
 ------------
@@ -31,25 +50,39 @@ None
 
 Example Playbook
 ----------------
-Specify the key parameters needed for key generation to be passed to the role.
+Specify the parameters needed for GPG key manipulation.
 
     - hosts: localhost
       roles:
-        - role: gpg/operation/generate
+        - role: gpg
           vars:
-            gpg:
-              generate:
-                keys:
-                  - user: test
-                    email: test@test.com
-                    passphrase: test
-                    comment: "No comment is not the best comment."
-                    sub_keys:
-                      - purpose: 'sign'
-                        length: 2048
-              export: ...
-              import: ...
-            harden: yes
+            generate:
+              keys:
+                - user: test
+                  email: test@test.com
+                  passphrase: test
+                  comment: "No comment is not the best comment."
+                  sub_keys:
+                    - purpose: 'sign'
+                      length: 2048
+
+            export:
+              dir: ~/test-export
+              export_trust: yes
+              harden: yes
+              keys:
+                - email: test@test.com
+                  passphrase: test-passphrase-to-allow-export
+
+            import:
+              trusts:
+                - path: "/path/to/trust.pgp"
+              keys:
+                - public: ~/public.key
+                  private: ~/private.key
+                  passphrase: test
+
+          hide_secrets: yes
 
 License
 -------

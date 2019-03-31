@@ -1,0 +1,23 @@
+---
+
+- name: import private keys
+  when:
+    - item['private'] is defined
+    - item['passphrase'] is defined
+  shell: echo "{{ item.passphrase }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --import "{{ item.private }}"
+  loop: "{{ keys | default([]) }}"
+  no_log: "{{ hide_secrets }}"
+
+- name: import public keys
+  when:
+    - item['public'] is defined
+    - item['passphrase'] is defined
+  shell: echo "{{ item['passphrase'] }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --import "{{ item['public'] }}"
+  loop: "{{ keys | default([]) }}"
+  no_log: "{{ hide_secrets }}"
+
+- name: import trusts
+  when: item['path'] is defined
+  shell: gpg --import-ownertrust {{ item.path }}
+  loop: "{{ trusts | default([]) }}" 
+  no_log: "{{ hide_secrets }}"

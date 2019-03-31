@@ -1,0 +1,31 @@
+---
+
+- name: INFO
+  debug:
+    msg: "Generating a key for user '{{ record['user'] }}' with e-mail '{{ record['email'] }}'"
+
+# https://www.gnupg.org/documentation/manuals/gnupg/Unattended-GPG-key-generation.html
+- name: generate key
+  shell: echo "{{ lookup('template', './key.j2') }}" | gpg --batch --generate-key - 
+  no_log: "{{ hide_secrets }}"
+
+- name: INFO
+  block:
+    - name: find fingerprint
+      shell: "gpg --fingerprint {{ record['email'] }} | sed -n 2p | tr -d ' '"
+      register: find_fingerprint
+
+    - name: remember fingerprint
+      set_fact:
+        fingerprint: "{{ find_fingerprint.stdout }}"
+
+    - debug:
+        msg: "Generating sub-keys for user '{{ record.user }}' with e-mail '{{ record['.email'] }}' [fpr: {{ fingerprint }}]"
+
+- name: generate sub-keys
+  when: record['sub_keys'] is defined
+  shell: echo "{{ record['passphrase'] }}" | gpg --batch --pinentry-mode loopback --passphrase-fd 0 --quick-add-key {{ fingerprint }} {{ lookup('template', './subkey.j2') | trim }}
+  loop: "{{ record['sub_keys'] }}"
+  loop_control:
+    loop_var: subkey
+  no_log: "{{ hide_secrets }}"
