@@ -1,7 +1,7 @@
 ---
 
 - name: establish dependencies
-  package: 
+  package:
     name:
       - gpg
       - gpg-agent
@@ -11,7 +11,6 @@
 - name: generate GPG keys
   when: generate is defined
   include_tasks: generate/main.yml
-  vars: "{{ generate }}"
   tags: configure
 
 - name: export GPG keys
@@ -20,9 +19,8 @@
     - export['dir'] is defined
   block:
     - include_tasks: export/main.yml
-      vars: "{{ export }}"
       tags: configure
-      
+
     - name: harden local version of exported private keys
       include_tasks: harden.yml
       vars:
@@ -31,10 +29,8 @@
       loop_control:
         loop_var: key
       tags: configure
-  
+
 - name: import GPG keys
   when: import is defined
   include_tasks: import/main.yml
-  vars: "{{ import }}"
   tags: configure
-

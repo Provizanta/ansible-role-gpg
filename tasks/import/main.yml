@@ -1,23 +1,23 @@
 ---
 
-- name: import private keys
+- name: import | private keys
   when:
     - item['private'] is defined
     - item['passphrase'] is defined
-  shell: echo "{{ item.passphrase }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --import "{{ item.private }}"
+  shell: echo "{{ item['passphrase'] }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --import "{{ item['private'] }}"   # noqa 306
   loop: "{{ keys | default([]) }}"
   no_log: "{{ hide_secrets }}"
 
-- name: import public keys
+- name: import | public keys
   when:
     - item['public'] is defined
     - item['passphrase'] is defined
-  shell: echo "{{ item['passphrase'] }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --import "{{ item['public'] }}"
-  loop: "{{ keys | default([]) }}"
+  shell: echo "{{ item['passphrase'] }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 --import "{{ item['public'] }}"   # noqa 306
+  loop: "{{ import['keys'] | default([]) }}"
   no_log: "{{ hide_secrets }}"
 
-- name: import trusts
+- name: import | trusts
   when: item['path'] is defined
-  shell: gpg --import-ownertrust {{ item.path }}
-  loop: "{{ trusts | default([]) }}" 
+  command: gpg --import-ownertrust {{ item.path }}
+  loop: "{{ import['trusts'] | default([]) }}"
   no_log: "{{ hide_secrets }}"

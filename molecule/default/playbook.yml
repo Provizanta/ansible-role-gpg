@@ -1,0 +1,17 @@
+---
+
+- name: Converge
+  hosts: all
+  roles:
+    - role: gpg
+      vars:
+        hide_secrets: false
+        generate:
+          keys:
+            - user: test
+              email: test@test.com
+              passphrase: test
+              comment: "No comment is not the best comment."
+              sub_keys:
+                - purpose: 'sign'
+                  length: 2048

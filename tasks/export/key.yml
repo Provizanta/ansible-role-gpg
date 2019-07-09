@@ -1,21 +1,27 @@
 ---
 
-- name: ensure export directory presence
+- name: export | ensure export directory presence
   file:
     path: "{{ dir }}/{{ key['email'] }}"
     state: directory
 
-- name: generate revocation certificate
-  shell: echo -e "y\n0\n\ny" > "{{ command_file }}" && echo "{{ key['passphrase'] }}" | gpg --pinentry-mode loopback --command-file "{{ command_file }}" --passphrase-fd 0 --gen-revoke {{ key['email'] }} > {{ key['email'] }}.revocation-certificate
+- name: export | generate revocation certificate
+  shell: >-
+    echo -e "y\n0\n\ny" > "{{ command_file }}" &&
+    echo "{{ key['passphrase'] }}" | {{ gpg_command }} --command-file "{{ command_file }}" --gen-revoke {{ key['email'] }}
+    > {{ key['email'] }}.revocation-certificate   # noqa 306
   args:
     chdir: "{{ dir }}/{{ key['email'] }}"
     executable: bash
     creates: "{{ key['email'] }}.revocation-certificate"
   vars:
     command_file: /tmp/cmd
+    gpg_command: "gpg --pinentry-mode loopback --passphrase-fd 0"
 
-- name: export key
-  shell: echo "{{ key['passphrase'] }}" | gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0 {{ item.key }} --armor {{ key['email'] }} > {{ key['email'] }}.{{ item.value }}
+- name: export | key
+  shell: >-
+    echo "{{ key['passphrase'] }}" | {{ gpg_command }} {{ item.key }} --armor {{ key['email'] }}
+    > {{ key['email'] }}.{{ item.value }}   # noqa 306
   args:
     chdir: "{{ dir }}/{{ key['email'] }}"
     creates: "{{ key['email'] }}.{{ item.value }}"
@@ -24,5 +30,5 @@
       --export: public.gpg-key
       --export-secret-keys: private.gpg-key
       --export-secret-subkeys: private.subkeys_only.gpg-key
+    gpg_command: "gpg --pinentry-mode loopback --passphrase-fd 0 --batch --yes"
   loop: "{{ exported_files | dict2items }}"
-

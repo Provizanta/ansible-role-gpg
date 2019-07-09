@@ -1,18 +1,28 @@
+---
+
 galaxy_info:
-  author: Tibor Csoka
+  role_name: gpg
+  author: Tibor Csóka
+  description: |
+    "Manage GPG keys and trusts."
+  company: ""
 
   license: MIT
 
-  min_ansible_version: 2.7.8
+  min_ansible_version: 2.7.1
 
   platforms:
-    - name: Debian
-      versions:
-      - all
     - name: Ubuntu
       versions:
-      - all
+        - bionic
+        - cosmic
+    - name: Debian
+      versions:
+        - stretch
+        - buster
 
-  galaxy_tags: [gpg key openpgp]
+  galaxy_tags:
+    - gpg
+    - pgp
 
 dependencies: []

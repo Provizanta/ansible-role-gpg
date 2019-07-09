@@ -1,12 +1,11 @@
 ---
 
-- name: generate keys 
+- name: generate | keys
   when:
-    - keys is defined
-    - keys | length > 0
-  include_tasks: generate/key.yml
-  loop: "{{ keys }}"
+    - generate['keys'] is defined
+    - generate['keys'] | length > 0
+  include_tasks: key.yml
+  loop: "{{ generate['keys'] }}"
   loop_control:
-    loop_var: record 
+    loop_var: record
   no_log: "{{ hide_secrets }}"
-

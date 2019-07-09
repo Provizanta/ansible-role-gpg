@@ -1,7 +1,7 @@
-GPG
+Ansible role: GPG
 =========
 
-Manage GPG keys.
+Manage GPG keys and trusts.
 
 Requirements
 ------------
@@ -11,8 +11,13 @@ None
 Role Variables
 --------------
 
-    hide:_secrets: <bool, omit the secret data from logs>
-    generate: 
+These defaults are set in defaults/main.yml:
+
+    hide_secrets: true      # omit key details from logs
+
+Other variables that can be set:
+
+    generate:
       keys: <list, key parameters to be used for generating>
         - user: <string>
           email: <string, e-mail associated with this key>
@@ -24,7 +29,7 @@ Role Variables
             - purpose: <string, subkey type (e.g. sign/encrypt)>
               length: <int, subkey length>
               expiration: <date, when should the subkey expire (e.g. 0 for never)>
-  
+
     import:
       trusts: <list, trusts to import>
         - path: <string, path to trust>
@@ -32,16 +37,17 @@ Role Variables
         - public: <string, path to public key>
           private: <string, path to private key>
           passphrase: <string, path to passphrase>
-    
-    export: 
+
+    export:
       dir: <string, destination for local trust file export>
 
       keys: <list, args for key exports>
-        - email: <string> 
+        - email: <string>
           passphrase: <string, passphrase used to unlock the key>
 
       export_trust: <bool, should the trust be exported>
       harden: <bool, harden by removing the private master, leaving behind only subkeys>
+
 
 Dependencies
 ------------
@@ -50,12 +56,14 @@ None
 
 Example Playbook
 ----------------
+
 Specify the parameters needed for GPG key manipulation.
 
     - hosts: localhost
       roles:
         - role: gpg
           vars:
+            hide_secrets: yes
             generate:
               keys:
                 - user: test
@@ -82,7 +90,6 @@ Specify the parameters needed for GPG key manipulation.
                   private: ~/private.key
                   passphrase: test
 
-          hide_secrets: yes
 
 License
 -------
@@ -92,4 +99,4 @@ MIT
 Author Information
 ------------------
 
-Tibor Csoka
+Tibor Csóka

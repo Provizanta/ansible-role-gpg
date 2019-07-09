@@ -1,6 +1,0 @@
----
-
-- name: export trust
-  shell: "gpg --export-ownertrust > {{ dir }}/trust.gpg"
-  args:
-    creates: "{{ dir }}/trust.gpg"

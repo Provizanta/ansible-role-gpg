@@ -1,15 +1,19 @@
 ---
 
-- name: export keys
+- name: export | keys
   when:
     - keys is defined
     - key['email'] is defined
     - key['passphrase'] is defined
-  include_tasks: export/key.yml
-  loop: "{{ keys }}"
+  include_tasks: key.yml
+  loop: "{{ export['keys'] }}"
   loop_control:
     loop_var: key
+  vars:
+    dir: "{{ export['dir'] }}"
 
-- name: export trust
+- name: export | trust
   when: export_trust
-  include_tasks: export/trust.yml
+  shell: "gpg --export-ownertrust > {{ export['dir'] }}/trust.gpg"
+  args:
+    creates: "{{ export['dir'] }}/trust.gpg"
