@@ -15,8 +15,8 @@
 
 - name: export GPG keys
   when:
-    - export is defined
-    - export['dir'] is defined
+    - gpg_export is defined
+    - gpg_export['dir'] is defined
   block:
     - include_tasks: export/main.yml
       tags: configure
@@ -24,13 +24,13 @@
     - name: harden local version of exported private keys
       include_tasks: harden.yml
       vars:
-        export_dir: "{{ export['dir'] }}"
-      loop: "{{ export['keys'] }}"
+        export_dir: "{{ gpg_export['dir'] }}"
+      loop: "{{ gpg_export['keys'] }}"
       loop_control:
         loop_var: key
       tags: configure
 
 - name: import GPG keys
-  when: import is defined
+  when: gpg_import is defined
   include_tasks: import/main.yml
   tags: configure

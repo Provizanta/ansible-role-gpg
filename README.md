@@ -13,13 +13,13 @@ None
 Role Variables
 --------------
 
-These defaults are set in defaults/main.yml:
+These variables are set in [defaults/main.yml](./defaults/main.yml):
 
-    hide_secrets: true      # omit key details from logs
+    gpg_hide_secrets: true      # omit key details from logs
 
 Other variables that can be set:
 
-    generate:
+    gpg_generate:
       keys: <list, key parameters to be used for generating>
         - user: <string>
           email: <string, e-mail associated with this key>
@@ -32,7 +32,7 @@ Other variables that can be set:
               length: <int, subkey length>
               expiration: <date, when should the subkey expire (e.g. 0 for never)>
 
-    import:
+    gpg_import:
       trusts: <list, trusts to import>
         - path: <string, path to trust>
       keys: <list, keys to import>
@@ -40,7 +40,7 @@ Other variables that can be set:
           private: <string, path to private key>
           passphrase: <string, path to passphrase>
 
-    export:
+    gpg_export:
       dir: <string, destination for local trust file export>
 
       keys: <list, args for key exports>
@@ -66,7 +66,7 @@ Specify the parameters needed for GPG key manipulation.
         - role: gpg
           vars:
             hide_secrets: yes
-            generate:
+            gpg_generate:
               keys:
                 - user: test
                   email: test@test.com
@@ -76,15 +76,15 @@ Specify the parameters needed for GPG key manipulation.
                     - purpose: 'sign'
                       length: 2048
 
-            export:
-              dir: ~/test-export
-              export_trust: yes
+            gpg_export:
+              dir: ~/test-gpg_export
+              gpg_export_trust: yes
               harden: yes
               keys:
                 - email: test@test.com
-                  passphrase: test-passphrase-to-allow-export
+                  passphrase: test
 
-            import:
+            gpg_import:
               trusts:
                 - path: "/path/to/trust.pgp"
               keys:

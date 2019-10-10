@@ -6,14 +6,14 @@
     - key['email'] is defined
     - key['passphrase'] is defined
   include_tasks: key.yml
-  loop: "{{ export['keys'] }}"
+  loop: "{{ gpg_export['keys'] }}"
   loop_control:
     loop_var: key
   vars:
-    dir: "{{ export['dir'] }}"
+    dir: "{{ gpg_export['dir'] }}"
 
 - name: export | trust
   when: export_trust
-  shell: "gpg --export-ownertrust > {{ export['dir'] }}/trust.gpg"
+  shell: "gpg --export-ownertrust > {{ gpg_export['dir'] }}/trust.gpg"
   args:
-    creates: "{{ export['dir'] }}/trust.gpg"
+    creates: "{{ gpg_export['dir'] }}/trust.gpg"

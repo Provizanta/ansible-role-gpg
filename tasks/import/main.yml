@@ -19,5 +19,5 @@
 - name: import | trusts
   when: item['path'] is defined
   command: gpg --import-ownertrust {{ item.path }}
-  loop: "{{ import['trusts'] | default([]) }}"
+  loop: "{{ gpg_import['trusts'] | default([]) }}"
   no_log: "{{ hide_secrets }}"

@@ -2,10 +2,10 @@
 
 - name: generate | keys
   when:
-    - generate['keys'] is defined
-    - generate['keys'] | length > 0
+    - gpg_generate['keys'] is defined
+    - gpg_generate['keys'] | length > 0
   include_tasks: key.yml
-  loop: "{{ generate['keys'] }}"
+  loop: "{{ gpg_generate['keys'] }}"
   loop_control:
     loop_var: record
   no_log: "{{ hide_secrets }}"
