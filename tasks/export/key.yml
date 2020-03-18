@@ -5,11 +5,11 @@
     path: "{{ dir }}/{{ key['email'] }}"
     state: directory
 
-- name: export | generate revocation certificate
+- name: export | generate revocation certificate  # noqa 306
   shell: >-
     echo -e "y\n0\n\ny" > "{{ command_file }}" &&
     echo "{{ key['passphrase'] }}" | {{ gpg_command }} --command-file "{{ command_file }}" --gen-revoke {{ key['email'] }}
-    > {{ key['email'] }}.revocation-certificate   # noqa 306
+    > {{ key['email'] }}.revocation-certificate
   args:
     chdir: "{{ dir }}/{{ key['email'] }}"
     executable: bash
@@ -18,10 +18,10 @@
     command_file: /tmp/cmd
     gpg_command: "gpg --pinentry-mode loopback --passphrase-fd 0"
 
-- name: export | key
+- name: export | key    # noqa 306
   shell: >-
     echo "{{ key['passphrase'] }}" | {{ gpg_command }} {{ item.key }} --armor {{ key['email'] }}
-    > {{ key['email'] }}.{{ item.value }}   # noqa 306
+    > {{ key['email'] }}.{{ item.value }}
   args:
     chdir: "{{ dir }}/{{ key['email'] }}"
     creates: "{{ key['email'] }}.{{ item.value }}"

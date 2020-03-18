@@ -1,9 +1,9 @@
 ---
 
-- name: harden | identify fingerprint
+- name: harden | identify fingerprint    # noqa 306
   shell: >-
     gpg --list-secret-keys --with-colons --fingerprint {{ key['email'] }}
-    | sed -n 's/^fpr:::::::::\([[:alnum:]]\+\):/\1/p' | sed -n 1p    # noqa 306
+    | sed -n 's/^fpr:::::::::\([[:alnum:]]\+\):/\1/p' | sed -n 1p
   changed_when: false
   register: fp
 
@@ -11,11 +11,11 @@
   vars:
     gpg_command: "gpg --pinentry-mode loopback --batch --yes --passphrase-fd 0"
   block:
-    - name: remove private master key
-      shell: echo "{{ key['passphrase'] }}" | {{ gpg_command }} --delete-secret-key {{ fp.stdout }}   # noqa 306
+    - name: remove private master key       # noqa 306
+      shell: echo "{{ key['passphrase'] }}" | {{ gpg_command }} --delete-secret-key {{ fp.stdout }}
 
-    - name: reimport only private subkeys
-      shell: echo "{{ key['passphrase'] }}" | {{ gpg_command }} --import {{ key['email'] }}/{{ key['email'] }}.private.subkeys_only.gpg-key   # noqa 306
+    - name: reimport only private subkeys   # noqa 306
+      shell: echo "{{ key['passphrase'] }}" | {{ gpg_command }} --import {{ key['email'] }}/{{ key['email'] }}.private.subkeys_only.gpg-key
       args:
         chdir: "{{ export_dir }}"
       no_log: "{{ hide_secrets }}"

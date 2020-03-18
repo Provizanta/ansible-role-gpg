@@ -14,8 +14,8 @@ galaxy_info:
   platforms:
     - name: Ubuntu
       versions:
+        - focal
         - bionic
-        - cosmic
     - name: Debian
       versions:
         - stretch
