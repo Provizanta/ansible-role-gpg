@@ -8,7 +8,7 @@
       apt:
         update_cache: true
   roles:
-    - role: gpg
+    - role: ansible-role-gpg
       vars:
         hide_secrets: false
         gpg_generate:

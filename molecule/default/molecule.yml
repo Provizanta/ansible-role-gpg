@@ -8,7 +8,6 @@ lint: |
   set -e
   yamllint -c .yamllint .
   ansible-lint
-  flake8
 platforms:
   - name: instance
     image: "geerlingguy/docker-${MOLECULE_DISTRO:-centos7}-ansible:latest"

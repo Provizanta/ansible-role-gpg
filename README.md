@@ -1,7 +1,7 @@
 Ansible role: GPG
 =========
 
-[![Build Status](https://travis-ci.com/Provizanta/ansible-role-gpg.svg?branch=master)](https://travis-ci.com/Provizanta/ansible-role-gpg)
+![Build & Deploy](https://github.com/Provizanta/ansible-role-gpg/workflows/molecule/badge.svg?branch=master)
 
 Manage GPG keys and trusts.
 
