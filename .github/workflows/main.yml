@@ -3,7 +3,6 @@
 name: molecule
 
 on:
-  schedule:    - cron: '* 1 * * 1'
   push:
     branches:
       - master
@@ -39,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: to Ansible Galaxy
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.head_ref == 'master')
         uses: robertdebock/galaxy-action@1.0.3
         with:
           galaxy_api_key: ${{ secrets.GALAXY_API_KEY }}
