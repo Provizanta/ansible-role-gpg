@@ -2,6 +2,7 @@
 
 galaxy_info:
   role_name: gpg
+  namespace: provizanta
   author: Tibor Csóka
   description: |
     "Manage GPG keys and trusts."
