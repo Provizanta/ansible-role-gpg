@@ -6,6 +6,8 @@ on:
   push:
     branches:
       - master
+    tags:
+      - v*.*.*
   pull_request:
     branches:
       - master
@@ -39,6 +41,7 @@ jobs:
     steps:
       - name: to Ansible Galaxy
         if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.head_ref == 'master')
-        uses: robertdebock/galaxy-action@1.1.0
+        uses: robertdebock/galaxy-action@1.2.0
         with:
           galaxy_api_key: ${{ secrets.GALAXY_API_KEY }}
+          git_branch: master
